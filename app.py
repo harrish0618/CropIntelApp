@@ -8,7 +8,7 @@ app = Flask(__name__)
 def load_data():
     data = {}
     with open("agri_data.csv", "r", encoding="utf-8") as file:
-        reader = csv.reader(file, delimiter="|")  # Using | as requested
+        reader = csv.reader(file, delimiter="|")
         for row in reader:
             if len(row) == 2:
                 question, answer = row
@@ -23,7 +23,6 @@ def home():
 
 @app.route("/get", methods=["POST"])
 def get_bot_response():
-    # FRONTEND sends:  { msg: "..." }
     user_input = request.form["msg"].strip().lower()
 
     # Exact match
@@ -35,8 +34,7 @@ def get_bot_response():
     if closest:
         return jsonify({"response": qa_data[closest[0]]})
 
-    # No match found
     return jsonify({"response": "I'm still learning 🌱 — please ask about crops, fertilizers, or farming methods."})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
