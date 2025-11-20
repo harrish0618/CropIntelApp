@@ -1,0 +1,167 @@
+/* ---------- General Layout ---------- */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: url("../images/leaves_pattern.png"),
+              linear-gradient(to right, #a8e063, #56ab2f);
+  background-repeat: repeat;
+  background-size: 300px auto, cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+  text-align: center;
+  padding: 20px 0 10px;
+  background: linear-gradient(90deg, #3c9a46, #5bd75a);
+  color: white;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.app-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+/* ---------- Chat Container ---------- */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.9)
+              url("../images/tractor.jpg") no-repeat right bottom;
+  background-size: 250px auto;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 750px;
+  height: 80%;
+  margin-top: 25px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+/* ---------- Chat Box ---------- */
+.chat-box {
+  padding: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+  background-color: #f8fff4;
+}
+
+.user-message,
+.bot-message {
+  padding: 12px 15px;
+  margin: 8px 0;
+  border-radius: 15px;
+  max-width: 80%;
+  word-wrap: break-word;
+  line-height: 1.4;
+  font-size: 15px;
+}
+
+.user-message {
+  background: #dcf8c6;
+  color: #1b3d1b;
+  align-self: flex-end;
+  margin-left: auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.bot-message {
+  background: #edf9e3;
+  color: #204020;
+  align-self: flex-start;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ---------- Chat Form ---------- */
+.chat-form {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-top: 1px solid #d4e9ce;
+  background: #f0f8ef;
+}
+
+.chat-form input {
+  flex-grow: 1;
+  padding: 12px;
+  border-radius: 30px;
+  border: 1px solid #94d394;
+  outline: none;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.chat-form input:focus {
+  border-color: #5bd75a;
+  box-shadow: 0 0 6px rgba(91,215,90,0.3);
+}
+
+.chat-form button {
+  background: linear-gradient(90deg, #3c9a46, #5bd75a);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 50%;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s;
+  box-shadow: 0 4px 10px rgba(91,215,90,0.3);
+}
+
+.chat-form button:hover {
+  background: linear-gradient(90deg, #5bd75a, #8be68a);
+}
+
+/* ---------- Floating doodle animation ---------- */
+.floating-leaf,
+.floating-crop {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+  z-index: 0;
+  animation-timing-function: linear;
+}
+
+#leaf1 {
+  top: -60px;
+  left: 10%;
+  background-image: url("../images/leaf1.png");
+  animation: fall 18s infinite;
+}
+
+#leaf2 {
+  top: -60px;
+  left: 70%;
+  background-image: url("../images/leaf2.png");
+  animation: fall 22s infinite;
+}
+
+#crop1 {
+  top: -60px;
+  left: 40%;
+  background-image: url("../images/crop1.png");
+  animation: fall 25s infinite;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
+}

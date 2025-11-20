@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CropIntel - Smart Agri Assistant</title>
+  <link rel="icon" href="{{ url_for('static', filename='images/cropintel_icon.png') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body>
+  <!-- Floating doodle art elements -->
+  <div class="floating-leaf" id="leaf1"></div>
+  <div class="floating-leaf" id="leaf2"></div>
+  <div class="floating-crop" id="crop1"></div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <img
+      src="{{ url_for('static', filename='images/cropintel_icon.png') }}"
+      alt="CropIntel Logo"
+      class="app-logo"
+    />
+    <h1>CropIntel</h1>
+    <p>Your Smart Agriculture Assistant 🌾</p>
+  </header>
+
+  <!-- Chat container -->
+  <main class="chat-container">
+    <div id="chat-box" class="chat-box">
+      <div class="bot-message">
+        👋 Hi, I’m CropIntel. Ask me anything about farming, crops, fertilizers, or disaster management.
+      </div>
+    </div>
+
+    <!-- Chat input -->
+    <form id="chat-form" class="chat-form" onsubmit="return sendMessage(event)">
+      <input
+        type="text"
+        id="user-input"
+        placeholder="Type your message..."
+        autocomplete="off"
+      />
+      <button type="submit">➤</button>
+    </form>
+  </main>
+
+  <!-- Script to send and display messages -->
+  <script>
+    async function sendMessage(event) {
+      event.preventDefault();
+      const userInput = document.getElementById("user-input");
+      const chatBox = document.getElementById("chat-box");
+      const msg = userInput.value.trim();
+      if (!msg) return;
+
+      // Display user message
+      const userMsg = document.createElement("div");
+      userMsg.className = "user-message";
+      userMsg.textContent = msg;
+      chatBox.appendChild(userMsg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      userInput.value = "";
+
+      // Fetch response from Flask backend
+      const response = await fetch("/get", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "msg=" + encodeURIComponent(msg)
+      });
+
+      const data = await response.json();
+      const botMsg = document.createElement("div");
+      botMsg.className = "bot-message";
+      botMsg.textContent = data.response;
+      chatBox.appendChild(botMsg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
