@@ -1,5 +1,5 @@
-Flask
-gunicorn
-pandas
+flask
 python-dotenv
-numpy
+groq
+gunicorn
+flask-cors

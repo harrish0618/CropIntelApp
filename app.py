@@ -1,40 +1,47 @@
-from flask import Flask, render_template, request, jsonify
-import csv
-import difflib
+from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
+from groq import Groq
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 
-# Load Q&A from CSV using | delimiter
-def load_data():
-    data = {}
-    with open("agri_data.csv", "r", encoding="utf-8") as file:
-        reader = csv.reader(file, delimiter="|")
-        for row in reader:
-            if len(row) == 2:
-                question, answer = row
-                data[question.strip().lower()] = answer.strip()
-    return data
-
-qa_data = load_data()
+# Initialize Groq client
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
-@app.route("/get", methods=["POST"])
-def get_bot_response():
-    user_input = request.form["msg"].strip().lower()
+# ⭐ FIXED ROUTE — must be /ask (NOT /get)
+@app.route("/ask", methods=["POST"])
+def ask():
+    try:
+        user_message = request.json.get("message", "")
 
-    # Exact match
-    if user_input in qa_data:
-        return jsonify({"response": qa_data[user_input]})
+        if not user_message:
+            return jsonify({"reply": "⚠ CropIntel Error: Empty message received."})
 
-    # Fuzzy match
-    closest = difflib.get_close_matches(user_input, qa_data.keys(), n=1, cutoff=0.6)
-    if closest:
-        return jsonify({"response": qa_data[closest[0]]})
+        # Groq API call
+        completion = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {"role": "system", "content": "You are CropIntel, an agriculture expert assistant."},
+                {"role": "user", "content": user_message}
+            ]
+        )
 
-    return jsonify({"response": "I'm still learning 🌱 — please ask about crops, fertilizers, or farming methods."})
+        bot_reply = completion.choices[0].message.content
+
+        # ⭐ MUST RETURN "reply" (your JS expects this)
+        return jsonify({"reply": bot_reply})
+
+    except Exception as e:
+        return jsonify({"reply": f"⚠ CropIntel Server Error: {str(e)}"})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True)

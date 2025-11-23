@@ -1,116 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CropIntel - Smart Agri Assistant</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CropIntel</title>
 
-  <!-- Website Icon -->
-  <link rel="icon" href="{{ url_for('static', filename='images/cropintel_icon.png') }}" />
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-
-  <!-- Logo Styling -->
-  <style>
-    .app-header {
-      text-align: center;
-      margin-top: 40px;
-      color: white;
-      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
-    }
-
-    .app-logo {
-      width: 140px;
-      height: auto;
-      border-radius: 15px;
-      margin-bottom: 10px;
-      box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
-      animation: fadeIn 1.5s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95);}
-      to { opacity: 1; transform: scale(1);}
-    }
-  </style>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
 <body>
 
-  <!-- 🌾 Animated Background Video -->
-  <video autoplay muted loop id="bg-video">
-    <source src="{{ url_for('static', filename='images/background.mp4') }}" type="video/mp4">
-  </video>
+    <!-- 🔥 Fullscreen Video Background -->
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="/static/videos/background.mp4" type="video/mp4">
+    </video>
 
-  <!-- Floating doodles -->
-  <div class="floating-leaf" id="leaf1"></div>
-  <div class="floating-leaf" id="leaf2"></div>
-  <div class="floating-crop" id="crop1"></div>
+    <!-- 🟩 MAIN UI GLASS PANEL -->
+    <div class="main-container">
 
-  <!-- 🌻 Header Section with Logo -->
-  <header class="app-header">
-    <img 
-      src="{{ url_for('static', filename='images/cropintel_logo.png') }}" 
-      alt="CropIntel Logo" 
-      class="app-logo"
-    />
-    <h1>CropIntel</h1>
-    <p>Your Smart Agriculture Assistant 🌾</p>
-  </header>
+        <div class="header">
+            <img src="/static/images/cropintel_logo.png" class="logo">
+            <h1>CropIntel</h1>
+            <h3 class="subtitle">Your Smart Agriculture Assistant 🌾</h3>
+        </div>
 
-  <!-- Chat Section -->
-  <main class="chat-container">
-    <div id="chat-box" class="chat-box">
-      <div class="bot-message">
-        👋 Hi, I’m CropIntel. Ask me anything about farming, crops, fertilizers, or disaster management.
-      </div>
+        <div id="chatbox" class="chatbox">
+            <div class="bot-msg intro">
+                🌱 <strong>Hello farmer!</strong> I am <strong>CropIntel</strong>, your AI assistant.
+                Ask me anything about crops, soil, pests, or farming help.
+            </div>
+        </div>
+
+        <div class="input-row">
+            <input type="text" id="userInput" placeholder="Type your message...">
+            <button id="sendBtn" class="send-btn">📨</button>
+        </div>
+
     </div>
 
-    <!-- Message Input -->
-    <form id="chat-form" class="chat-form" onsubmit="return sendMessage(event)">
-      <input
-        type="text"
-        id="user-input"
-        placeholder="Type your message..."
-        autocomplete="off"
-      />
-      <button type="submit">➤</button>
-    </form>
-  </main>
-
-  <!-- Chat Script -->
-  <script>
-    async function sendMessage(event) {
-      event.preventDefault();
-      const userInput = document.getElementById("user-input");
-      const chatBox = document.getElementById("chat-box");
-      const msg = userInput.value.trim();
-      if (!msg) return;
-
-      // Show user message
-      const userMsg = document.createElement("div");
-      userMsg.className = "user-message";
-      userMsg.textContent = msg;
-      chatBox.appendChild(userMsg);
-      chatBox.scrollTop = chatBox.scrollHeight;
-      userInput.value = "";
-
-      // Backend call
-      const response = await fetch("/get", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "msg=" + encodeURIComponent(msg)
-      });
-
-      const data = await response.json();
-      const botMsg = document.createElement("div");
-      botMsg.className = "bot-message";
-      botMsg.textContent = data.response;
-      chatBox.appendChild(botMsg);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-  </script>
-
+    <script src="/static/js/script.js"></script>
 </body>
 </html>
