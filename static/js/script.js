@@ -10,7 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
     function addMessage(text, sender = "bot") {
         const msg = document.createElement("div");
         msg.classList.add(sender === "user" ? "user-msg" : "bot-msg");
-        msg.innerHTML = text;
+
+        if (sender === "user") {
+            msg.textContent = text;
+        } else {
+            // Bot messages: filled later by typeWriter
+            msg.innerHTML = text;
+        }
+
         chatbox.appendChild(msg);
         scrollToBottom();
         return msg;
@@ -20,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const typing = document.createElement("div");
         typing.classList.add("bot-msg");
         typing.id = "typing";
-        typing.innerHTML = "⏳ CropIntel is typing...";
+        typing.textContent = "⏳ CropIntel is typing...";
         chatbox.appendChild(typing);
         scrollToBottom();
     }
@@ -30,14 +37,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (t) t.remove();
     }
 
-    // ⭐ CHATGPT-LIKE TYPEWRITER + FORMATTING
+    // CHATGPT-LIKE TYPEWRITER (no bold conversion, no <strong>)
     async function typeWriter(targetBubble, text) {
 
-        // ✨ Convert markdown spacing to HTML spacing
+        // Convert only spacing, not markdown bold
         let formatted = text
-            .replace(/\n\n/g, "<br><br>")     // double newlines → extra spacing
-            .replace(/\n/g, "<br>")           // single newline → normal break
-            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>"); // Bold markdown
+            .replace(/\n\n/g, "<br><br>")   // double newline → gap
+            .replace(/\n/g, "<br>");        // single newline → break
 
         targetBubble.innerHTML = "";
         let i = 0;
@@ -50,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const char = formatted[i];
             let delay = 15;
 
-            // Natural pauses like ChatGPT
             if (char === "." || char === "!" || char === "?") delay = 250;
             else if (char === ",") delay = 120;
 
@@ -80,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const botBubble = addMessage("", "bot");
 
-            // ⭐ Apply ChatGPT style typing animation with spacing
             await typeWriter(botBubble, data.reply);
 
         } catch (err) {
